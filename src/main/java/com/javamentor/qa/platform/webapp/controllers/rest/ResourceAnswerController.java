@@ -1,15 +1,20 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.models.dto.AnswerDto;
+import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
+import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.service.abstracts.dto.AnswerDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
+import com.javamentor.qa.platform.service.abstracts.model.UserService;
+import com.javamentor.qa.platform.service.abstracts.model.VoteAnswerService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -20,6 +25,8 @@ public class ResourceAnswerController {
 
     private final AnswerService answerService;
     private final AnswerDtoService answerDtoService;
+    private final VoteAnswerService voteAnswerService;
+    private final UserService userService;
 
     @ApiOperation(value = "Удаление ответа на вопрос", tags = {"Удаление ответа"})
     @ApiResponses(value = {
@@ -42,4 +49,23 @@ public class ResourceAnswerController {
         return new ResponseEntity<>(answerDtoService.getAnswerByQuestionId(questionId), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Голосование за ответ", tags = {"Получение общего количества голосов"})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Успешное голосование")})
+    @PostMapping("/{id}/upVote")
+    public ResponseEntity<Long> setUpVoteAnswerByAnswerId(@PathVariable("id") Long answerId, Authentication authentication) {
+        Long id = 2L; // todo убрать когда будет готово секьюрити
+        voteAnswerService.persist(new VoteAnswer(userService.getById(id).get(),answerService.getById(answerId).get(), VoteType.UP_VOTE));
+        return new ResponseEntity<>(voteAnswerService.getTotalVotesByAnswerId(answerId), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Голосование против ответа", tags = {"Получение общего количества голосов"})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Успешное голосование")})
+    @PostMapping("/{id}/downVote")
+    public ResponseEntity<Long> setDownVoteAnswerByAnswerId(@PathVariable("id") Long answerId, Authentication authentication) {
+        Long id = 2L; // todo убрать когда будет готово секьюрити
+        voteAnswerService.persist(new VoteAnswer(userService.getById(id).get(),answerService.getById(answerId).get(), VoteType.DOWN_VOTE));
+        return new ResponseEntity<>(voteAnswerService.getTotalVotesByAnswerId(answerId), HttpStatus.OK);
+    }
 }
