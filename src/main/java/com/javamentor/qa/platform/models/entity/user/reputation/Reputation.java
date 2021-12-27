@@ -25,6 +25,7 @@ import java.util.Objects;
 @Table(name = "reputation")
 public class Reputation implements Serializable {
     private static final long serialVersionUID = 7177182244933788025L;
+
     @Id
     @GeneratedValue(generator = "Reputation_seq")
     private Long id;
@@ -73,5 +74,14 @@ public class Reputation implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, persistDate, count);
+    }
+
+
+    public Reputation(User author, User sender, Integer count, ReputationType type, Answer answer) {
+        this.author = author;
+        this.sender = sender;
+        this.count = count;
+        this.type = type;
+        this.answer = answer;
     }
 }

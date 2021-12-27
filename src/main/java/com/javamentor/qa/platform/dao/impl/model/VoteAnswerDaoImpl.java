@@ -15,7 +15,7 @@ public class VoteAnswerDaoImpl extends ReadWriteDaoImpl<VoteAnswer, Long> implem
 
     @Override
     public Long getTotalVotesByAnswerId(Long id) {
-        return (Long) entityManager.createQuery("select count(v.vote) from VoteAnswer v where v.answer.id =:id")
+        return (Long) entityManager.createQuery("select count(v) from VoteAnswer v where v.answer.id =:id")
             .setParameter("id",id).getSingleResult();
     }
 }
