@@ -13,9 +13,7 @@ import java.time.LocalDateTime;
 
 
 @Entity
-@Table(name = "votes_on_answers"
-//        , uniqueConstraints = {@UniqueConstraint(columnNames = {"user", "answer"})}
-)
+@Table(name = "votes_on_answers", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "answer_id"})})
 @Getter
 @Setter
 @NoArgsConstructor
