@@ -11,8 +11,7 @@ import javax.persistence.PersistenceContext;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -102,4 +101,72 @@ class ResourceAnswerControllerTest extends AbstractApiTest {
 
     }
 
+    @Test
+    @DataSet(value = {
+            "votingApiDatasets/answer.yml",
+            "votingApiDatasets/question.yml",
+            "votingApiDatasets/questionHasTag.yml",
+            "votingApiDatasets/tag.yml",
+            "votingApiDatasets/reputation.yml",
+            "votingApiDatasets/role.yml",
+            "votingApiDatasets/user.yml",
+            "votingApiDatasets/voteAnswer.yml"
+    })
+    public void setUpVoteAnswerByAnswerId() throws Exception {
+        this.mvc.perform(post("/api/user/question/100/answer/100/upVote"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DataSet(value = {
+            "votingApiDatasets/answer.yml",
+            "votingApiDatasets/question.yml",
+            "votingApiDatasets/questionHasTag.yml",
+            "votingApiDatasets/tag.yml",
+            "votingApiDatasets/reputation.yml",
+            "votingApiDatasets/role.yml",
+            "votingApiDatasets/user.yml",
+            "votingApiDatasets/voteAnswer.yml"
+    })
+    public void setDownVoteAnswerByAnswerId() throws Exception {
+        this.mvc.perform(post("/api/user/question/100/answer/100/downVote"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DataSet(value = {
+            "votingApiDatasets/answer.yml",
+            "votingApiDatasets/question.yml",
+            "votingApiDatasets/questionHasTag.yml",
+            "votingApiDatasets/tag.yml",
+            "votingApiDatasets/reputation.yml",
+            "votingApiDatasets/role.yml",
+            "votingApiDatasets/user.yml",
+            "votingApiDatasets/votingWithDuplicateUserAndAnswer/voteAnswer.yml"
+    })
+    public void setUpVoteAnswerByAnswerIdDuplicate() throws Exception {
+        this.mvc.perform(post("/api/user/question/100/answer/100/upVote"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    @DataSet(value = {
+            "votingApiDatasets/answer.yml",
+            "votingApiDatasets/question.yml",
+            "votingApiDatasets/questionHasTag.yml",
+            "votingApiDatasets/tag.yml",
+            "votingApiDatasets/reputation.yml",
+            "votingApiDatasets/role.yml",
+            "votingApiDatasets/user.yml",
+            "votingApiDatasets/votingWithDuplicateUserAndAnswer/voteAnswer.yml"
+    })
+    public void setDownVoteAnswerByAnswerIdDuplicate() throws Exception {
+        this.mvc.perform(post("/api/user/question/100/answer/100/downVote"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
 }
